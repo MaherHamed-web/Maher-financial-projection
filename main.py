@@ -9,62 +9,34 @@ text = {
     "English": {
         "title": "Interactive Financial Projection App",
         "subtitle": "Developed by Abdulaziz Alerwi",
-        "toggle_comparison": "Enable Comparison Between Scenarios",
         "scenario_1": "Scenario 1",
         "scenario_2": "Scenario 2",
         "starting_amount": "Starting Amount ($)",
         "monthly_addition": "Monthly Addition ($)",
         "monthly_growth_rate": "Monthly Growth Rate (%)",
         "projection_months": "Number of Months",
-        "inflation_rate": "Annual Inflation Rate (%)",
-        "savings_goal": "Savings Goal ($)",
-        "final_balance": "Final Balance ($):",
-        "total_contributions": "Total Contributions ($):",
-        "total_growth": "Total Growth ($):",
-        "goal_achieved": "You can achieve your savings goal by month:",
-        "goal_not_achieved": "You cannot achieve your savings goal with the current inputs.",
-        "break_even": "Growth surpasses contributions at month:",
         "projection_table": "Projection Table",
-        "final_balance_chart": "Final Balance Distribution",
-        "chart_title": "Projection Chart",
-        "comparison_chart": "Comparison Chart",
-        "download_csv": "Download Table as CSV",
+        "chart_title": "Projection Comparison Chart",
+        "download_csv": "Download Comparison Table as CSV",
         "month": "Month",
-        "balance": "Balance ($)",
-        "inflation_adjusted_balance": "Inflation-Adjusted Balance ($)",
-        "source": "Source",
-        "contributions": "Contributions",
-        "growth": "Growth",
+        "balance_scenario_1": "Balance (Scenario 1)",
+        "balance_scenario_2": "Balance (Scenario 2)",
     },
     "العربية": {
         "title": "تطبيق التوقعات المالية التفاعلية",
         "subtitle": "تم التطوير بواسطة عبدالعزيز العروي",
-        "toggle_comparison": "تمكين المقارنة بين السيناريوهات",
         "scenario_1": "السيناريو 1",
         "scenario_2": "السيناريو 2",
         "starting_amount": "المبلغ الابتدائي (ريال)",
         "monthly_addition": "المبلغ المضاف شهرياً (ريال)",
         "monthly_growth_rate": "نسبة النمو الشهرية (%)",
         "projection_months": "عدد الأشهر",
-        "inflation_rate": "معدل التضخم السنوي (%)",
-        "savings_goal": "الهدف الادخاري (ريال)",
-        "final_balance": "الرصيد النهائي (ريال):",
-        "total_contributions": "إجمالي المساهمات (ريال):",
-        "total_growth": "إجمالي النمو (ريال):",
-        "goal_achieved": "يمكنك تحقيق هدفك الادخاري في الشهر:",
-        "goal_not_achieved": "لن تتمكن من تحقيق هدفك الادخاري بناءً على المدخلات الحالية.",
-        "break_even": "النمو يتجاوز المساهمات في الشهر:",
         "projection_table": "الجدول التوقعي",
-        "final_balance_chart": "توزيع الرصيد النهائي",
-        "chart_title": "الرسم البياني للتوقعات",
-        "comparison_chart": "مخطط المقارنة",
-        "download_csv": "تحميل الجدول بصيغة CSV",
+        "chart_title": "مخطط مقارنة التوقعات",
+        "download_csv": "تحميل جدول المقارنة بصيغة CSV",
         "month": "الشهر",
-        "balance": "الرصيد (ريال)",
-        "inflation_adjusted_balance": "الرصيد بعد التضخم (ريال)",
-        "source": "المصدر",
-        "contributions": "المساهمات",
-        "growth": "النمو",
+        "balance_scenario_1": "الرصيد (السيناريو 1)",
+        "balance_scenario_2": "الرصيد (السيناريو 2)",
     }
 }
 
@@ -75,69 +47,52 @@ t = text[language]
 st.title(t["title"])
 st.subheader(t["subtitle"])
 
-# Toggle for comparison
-enable_comparison = st.checkbox(t["toggle_comparison"])
+# Inputs for Scenario 1
+st.header(t["scenario_1"])
+starting_amount_1 = st.number_input(f"{t['starting_amount']} ({t['scenario_1']})", value=30000, step=1000, key="s1_start")
+monthly_addition_1 = st.number_input(f"{t['monthly_addition']} ({t['scenario_1']})", value=1000, step=100, key="s1_add")
+monthly_growth_rate_1 = st.number_input(f"{t['monthly_growth_rate']} ({t['scenario_1']})", value=2.0, step=0.1, min_value=0.0, max_value=10.0, key="s1_growth") / 100
+projection_months_1 = st.number_input(f"{t['projection_months']} ({t['scenario_1']})", value=200, step=1, min_value=1, max_value=300, key="s1_months")
 
-# Single or Comparison Mode
-if enable_comparison:
-    # Inputs for Scenario 1
-    st.header(t["scenario_1"])
-    starting_amount_1 = st.number_input(f"{t['starting_amount']} ({t['scenario_1']})", value=30000, step=1000, key="s1_start")
-    monthly_addition_1 = st.number_input(f"{t['monthly_addition']} ({t['scenario_1']})", value=1000, step=100, key="s1_add")
-    monthly_growth_rate_1 = st.number_input(f"{t['monthly_growth_rate']} ({t['scenario_1']})", value=2.0, step=0.1, key="s1_growth") / 100
-    projection_months_1 = st.number_input(f"{t['projection_months']} ({t['scenario_1']})", value=200, step=1, key="s1_months")
+# Inputs for Scenario 2
+st.header(t["scenario_2"])
+starting_amount_2 = st.number_input(f"{t['starting_amount']} ({t['scenario_2']})", value=30000, step=1000, key="s2_start")
+monthly_addition_2 = st.number_input(f"{t['monthly_addition']} ({t['scenario_2']})", value=1500, step=100, key="s2_add")
+monthly_growth_rate_2 = st.number_input(f"{t['monthly_growth_rate']} ({t['scenario_2']})", value=3.0, step=0.1, min_value=0.0, max_value=10.0, key="s2_growth") / 100
+projection_months_2 = st.number_input(f"{t['projection_months']} ({t['scenario_2']})", value=200, step=1, min_value=1, max_value=300, key="s2_months")
 
-    # Inputs for Scenario 2
-    st.header(t["scenario_2"])
-    starting_amount_2 = st.number_input(f"{t['starting_amount']} ({t['scenario_2']})", value=30000, step=1000, key="s2_start")
-    monthly_addition_2 = st.number_input(f"{t['monthly_addition']} ({t['scenario_2']})", value=1500, step=100, key="s2_add")
-    monthly_growth_rate_2 = st.number_input(f"{t['monthly_growth_rate']} ({t['scenario_2']})", value=3.0, step=0.1, key="s2_growth") / 100
-    projection_months_2 = st.number_input(f"{t['projection_months']} ({t['scenario_2']})", value=200, step=1, key="s2_months")
+# Calculate projections for Scenario 1
+months_1 = list(range(1, int(projection_months_1) + 1))
+balances_1 = []
+current_balance_1 = starting_amount_1
+for month in months_1:
+    current_balance_1 = current_balance_1 * (1 + monthly_growth_rate_1) + monthly_addition_1
+    balances_1.append(current_balance_1)
 
-    # Projection calculations for both scenarios
-    months_1 = list(range(1, int(projection_months_1) + 1))
-    balances_1 = [starting_amount_1]
-    for month in months_1[1:]:
-        balances_1.append(balances_1[-1] * (1 + monthly_growth_rate_1) + monthly_addition_1)
+# Calculate projections for Scenario 2
+months_2 = list(range(1, int(projection_months_2) + 1))
+balances_2 = []
+current_balance_2 = starting_amount_2
+for month in months_2:
+    current_balance_2 = current_balance_2 * (1 + monthly_growth_rate_2) + monthly_addition_2
+    balances_2.append(current_balance_2)
 
-    months_2 = list(range(1, int(projection_months_2) + 1))
-    balances_2 = [starting_amount_2]
-    for month in months_2[1:]:
-        balances_2.append(balances_2[-1] * (1 + monthly_growth_rate_2) + monthly_addition_2)
+# Combine both scenarios into one DataFrame for comparison
+max_months = max(len(months_1), len(months_2))
+comparison_data = pd.DataFrame({
+    t["month"]: list(range(1, max_months + 1)),
+    t["balance_scenario_1"]: balances_1 + [None] * (max_months - len(balances_1)),
+    t["balance_scenario_2"]: balances_2 + [None] * (max_months - len(balances_2)),
+})
 
-    # Combine results into a DataFrame
-    comparison_df = pd.DataFrame({
-        t["month"]: months_1 if len(months_1) > len(months_2) else months_2,
-        t["balance_scenario_1"]: balances_1 + [None] * (len(months_2) - len(months_1)),
-        t["balance_scenario_2"]: balances_2 + [None] * (len(months_1) - len(months_2)),
-    })
+# Display the comparison table
+st.subheader(t["projection_table"])
+st.write(comparison_data)
 
-    # Display comparison table and chart
-    st.subheader(t["projection_table"])
-    st.write(comparison_df)
-    st.subheader(t["comparison_chart"])
-    st.line_chart(comparison_df.set_index(t["month"]))
+# Display the comparison chart
+st.subheader(t["chart_title"])
+st.line_chart(comparison_data.set_index(t["month"]))
 
-    # Allow CSV download
-    csv = comparison_df.to_csv(index=False).encode('utf-8')
-    st.download_button(label=t["download_csv"], data=csv, file_name="comparison_table.csv", mime="text/csv")
-else:
-    # Inputs for Single Scenario
-    starting_amount = st.number_input(t["starting_amount"], value=30000, step=1000)
-    monthly_addition = st.number_input(t["monthly_addition"], value=1000, step=100)
-    monthly_growth_rate = st.number_input(t["monthly_growth_rate"], value=2.0, step=0.1, min_value=0.0, max_value=10.0) / 100
-    projection_months = st.number_input(t["projection_months"], value=200, step=1, min_value=1, max_value=300)
-
-    # Projection calculation
-    months = list(range(1, int(projection_months) + 1))
-    balances = [starting_amount]
-    for month in months[1:]:
-        balances.append(balances[-1] * (1 + monthly_growth_rate) + monthly_addition)
-
-    # Summary statistics
-    total_contributions = monthly_addition * projection_months
-    total_growth = balances[-1] - (starting_amount + total_contributions)
-    break_even_month = next((i for i, b in enumerate(balances) if b >= total_contributions), None)
-
-    st.subheader(t["projection_table"])
-    st.write(f"**{t['final_balance']}** {balances[-1]:,.2f}")
+# Allow the user to download the comparison table as a CSV file
+csv = comparison_data.to_csv(index=False).encode('utf-8')
+st.download_button(label=t["download_csv"], data=csv, file_name="comparison_projection.csv", mime="text/csv")
