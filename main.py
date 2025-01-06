@@ -13,7 +13,12 @@ text = {
         "scenario_1": "Scenario 1",
         "scenario_2": "Scenario 2",
         "starting_amount": "Starting Amount ($)",
+        "contribution_type": "Contribution Frequency",
+        "monthly_contribution": "Monthly",
+        "yearly_contribution": "Yearly",
+        "contribution_amount": "Contribution Amount ($)",
         "monthly_addition": "Monthly Addition ($)",
+        "yearly_addition": "Yearly Addition ($)",
         "monthly_growth_rate": "Monthly Growth Rate (%)",
         "projection_months": "Number of Months",
         "inflation_rate": "Annual Inflation Rate (%)",
@@ -43,7 +48,12 @@ text = {
         "scenario_1": "السيناريو 1",
         "scenario_2": "السيناريو 2",
         "starting_amount": "المبلغ الابتدائي (ريال)",
-        "monthly_addition": "المبلغ المضاف شهرياً (ريال)",
+        "contribution_type": "نوع المساهمة",
+        "monthly_contribution": "شهري",
+        "yearly_contribution": "سنوي",
+        "contribution_amount": "قيمة المساهمة (ريال)",
+        "monthly_addition": "المساهمة الشهرية (ريال)",
+        "yearly_addition": "المساهمة السنوية (ريال)",
         "monthly_growth_rate": "نسبة النمو الشهرية (%)",
         "projection_months": "عدد الأشهر",
         "inflation_rate": "معدل التضخم السنوي (%)",
@@ -75,6 +85,17 @@ t = text[language]
 st.title(t["title"])
 st.subheader(t["subtitle"])
 
+# Contribution frequency selection
+contribution_type = st.radio(t["contribution_type"], [t["monthly_contribution"], t["yearly_contribution"]])
+
+# Define the contribution input based on the selected frequency
+if contribution_type == t["monthly_contribution"]:
+    contribution_frequency = 12  # Monthly contributions
+    contribution_label = t["monthly_addition"]
+else:
+    contribution_frequency = 1  # Yearly contributions
+    contribution_label = t["yearly_addition"]
+
 # Toggle for comparison
 enable_comparison = st.checkbox(t["toggle_comparison"])
 
@@ -83,27 +104,31 @@ if enable_comparison:
     # Inputs for Scenario 1
     st.header(t["scenario_1"])
     starting_amount_1 = st.number_input(f"{t['starting_amount']} ({t['scenario_1']})", value=30000, step=1000, key="s1_start")
-    monthly_addition_1 = st.number_input(f"{t['monthly_addition']} ({t['scenario_1']})", value=1000, step=100, key="s1_add")
+    contribution_amount_1 = st.number_input(f"{contribution_label} ({t['scenario_1']})", value=1000, step=100, key="s1_add")
     monthly_growth_rate_1 = st.number_input(f"{t['monthly_growth_rate']} ({t['scenario_1']})", value=2.0, step=0.1, key="s1_growth") / 100
     projection_months_1 = st.number_input(f"{t['projection_months']} ({t['scenario_1']})", value=200, step=1, key="s1_months")
 
     # Inputs for Scenario 2
     st.header(t["scenario_2"])
     starting_amount_2 = st.number_input(f"{t['starting_amount']} ({t['scenario_2']})", value=30000, step=1000, key="s2_start")
-    monthly_addition_2 = st.number_input(f"{t['monthly_addition']} ({t['scenario_2']})", value=1500, step=100, key="s2_add")
+    contribution_amount_2 = st.number_input(f"{contribution_label} ({t['scenario_2']})", value=1500, step=100, key="s2_add")
     monthly_growth_rate_2 = st.number_input(f"{t['monthly_growth_rate']} ({t['scenario_2']})", value=3.0, step=0.1, key="s2_growth") / 100
     projection_months_2 = st.number_input(f"{t['projection_months']} ({t['scenario_2']})", value=200, step=1, key="s2_months")
+
+    # Adjust contribution frequency for Scenario 1
+    adjusted_contribution_1 = contribution_amount_1 / contribution_frequency
+    adjusted_contribution_2 = contribution_amount_2 / contribution_frequency
 
     # Projection calculations for both scenarios
     months_1 = list(range(1, int(projection_months_1) + 1))
     balances_1 = [starting_amount_1]
     for month in months_1[1:]:
-        balances_1.append(balances_1[-1] * (1 + monthly_growth_rate_1) + monthly_addition_1)
+        balances_1.append(balances_1[-1] * (1 + monthly_growth_rate_1) + adjusted_contribution_1)
 
     months_2 = list(range(1, int(projection_months_2) + 1))
     balances_2 = [starting_amount_2]
     for month in months_2[1:]:
-        balances_2.append(balances_2[-1] * (1 + monthly_growth_rate_2) + monthly_addition_2)
+        balances_2.append(balances_2[-1] * (1 + monthly_growth_rate_2) + adjusted_contribution_2)
 
     # Combine results into a DataFrame
     comparison_df = pd.DataFrame({
@@ -124,20 +149,28 @@ if enable_comparison:
 else:
     # Inputs for Single Scenario
     starting_amount = st.number_input(t["starting_amount"], value=30000, step=1000)
-    monthly_addition = st.number_input(t["monthly_addition"], value=1000, step=100)
+    contribution_amount = st.number_input(contribution_label, value=1000, step=100)
     monthly_growth_rate = st.number_input(t["monthly_growth_rate"], value=2.0, step=0.1, min_value=0.0, max_value=10.0) / 100
     projection_months = st.number_input(t["projection_months"], value=200, step=1, min_value=1, max_value=300)
+
+    # Adjust contribution frequency
+    adjusted_contribution = contribution_amount / contribution_frequency
 
     # Projection calculation
     months = list(range(1, int(projection_months) + 1))
     balances = [starting_amount]
     for month in months[1:]:
-        balances.append(balances[-1] * (1 + monthly_growth_rate) + monthly_addition)
+        balances.append(balances[-1] * (1 + monthly_growth_rate) + adjusted_contribution)
 
     # Summary statistics
-    total_contributions = monthly_addition * projection_months
+    total_contributions = adjusted_contribution * projection_months
     total_growth = balances[-1] - (starting_amount + total_contributions)
     break_even_month = next((i for i, b in enumerate(balances) if b >= total_contributions), None)
 
+    # Display summary statistics
     st.subheader(t["projection_table"])
     st.write(f"**{t['final_balance']}** {balances[-1]:,.2f}")
+    st.write(f"**{t['total_contributions']}** {total_contributions:,.2f}")
+    st.write(f"**{t['total_growth']}** {total_growth:,.2f}")
+    if break_even_month:
+        st.write(f"**{t['break_even']}** {break_even_month}")
