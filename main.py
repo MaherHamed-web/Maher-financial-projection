@@ -3,16 +3,16 @@ import pandas as pd
 
 # Add a title to the app
 st.title("تطبيق التوقعات المالية التفاعلية")
-st.subheader("تم التطوير بواسطة ماهر العروي ")
+st.subheader("تم التطوير بواسطةعبدالعزيزالعروي ")
 
-# Add user inputs (in Arabic)
+# Add user inputs (all as input fields)
 starting_amount = st.number_input("المبلغ الابتدائي (ريال)", value=30000, step=1000)
 monthly_addition = st.number_input("المبلغ المضاف شهرياً (ريال)", value=1000, step=100)
-monthly_growth_rate = st.slider("نسبة النمو الشهرية (%)", min_value=0.0, max_value=10.0, value=2.0) / 100
-projection_months = st.slider("عدد الأشهر", min_value=1, max_value=300, value=200, step=10)
+monthly_growth_rate = st.number_input("نسبة النمو الشهرية (%)", value=2.0, step=0.1, min_value=0.0, max_value=10.0) / 100
+projection_months = st.number_input("عدد الأشهر", value=200, step=1, min_value=1, max_value=300)
 
 # Calculate the financial projection
-months = list(range(1, projection_months + 1))
+months = list(range(1, int(projection_months) + 1))
 balances = []
 current_balance = starting_amount
 for month in months:
