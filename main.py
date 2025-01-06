@@ -127,3 +127,17 @@ else:
     monthly_addition = st.number_input(t["monthly_addition"], value=1000, step=100)
     monthly_growth_rate = st.number_input(t["monthly_growth_rate"], value=2.0, step=0.1, min_value=0.0, max_value=10.0) / 100
     projection_months = st.number_input(t["projection_months"], value=200, step=1, min_value=1, max_value=300)
+
+    # Projection calculation
+    months = list(range(1, int(projection_months) + 1))
+    balances = [starting_amount]
+    for month in months[1:]:
+        balances.append(balances[-1] * (1 + monthly_growth_rate) + monthly_addition)
+
+    # Summary statistics
+    total_contributions = monthly_addition * projection_months
+    total_growth = balances[-1] - (starting_amount + total_contributions)
+    break_even_month = next((i for i, b in enumerate(balances) if b >= total_contributions), None)
+
+    st.subheader(t["projection_table"])
+    st.write(f"**{t['final_balance']}** {balances[-1]:,.2f}")
