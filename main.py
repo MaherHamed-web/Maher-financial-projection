@@ -8,7 +8,7 @@ language = st.radio("Select Language / اختر اللغة", ["English", "الع
 text = {
     "English": {
         "title": "Interactive Financial Projection App",
-        "subtitle": "Developed by Maher Al-Irwi (M-A-H-E-R-A-L-E-R-W-I)",
+        "subtitle": "Developed by Abdulaziz Alerwi )",
         "starting_amount": "Starting Amount ($)",
         "monthly_addition": "Monthly Addition ($)",
         "monthly_growth_rate": "Monthly Growth Rate (%)",
@@ -33,7 +33,7 @@ text = {
     },
     "العربية": {
         "title": "تطبيق التوقعات المالية التفاعلية",
-        "subtitle": "تم التطوير بواسطة ماهر العروي (M-A-H-E-R-A-L-E-R-W-I)",
+        "subtitle": "تم التطوير بواسطة عبدالعزيز العروي ",
         "starting_amount": "المبلغ الابتدائي (ريال)",
         "monthly_addition": "المبلغ المضاف شهرياً (ريال)",
         "monthly_growth_rate": "نسبة النمو الشهرية (%)",
